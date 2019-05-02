@@ -2,8 +2,9 @@ import graphene
 
 from graphene_django.types import DjangoObjectType
 
-from JJFDatabaseManager.masterdata.models import *
+from models import *
 
+# giving models an object type
 class StudentType(DjangoObjectType):
     class Meta:
         model = Student
@@ -32,11 +33,14 @@ class GoalType(DjangoObjectType):
     class Meta:
         model = Goal
 
+#root query type
 class Query(object):
-
+    
+    #can query all teachers or all students forinfromation purposes
     all_students = graphene.List(StudentType)
     all_teachers = graphene.List(TeacherType)
-
+    
+    #can query every type of object
     teacher = graphene.Field(TeacherType, first_name = graphene.String(), last_name=graphene.String(), grade = graphene.Float())
     student = graphene.Field(StudentType, first_name = graphene.String(), last_name=graphene.String())
     section = graphene.Field(SectionType, name = graphene.String())
@@ -45,8 +49,7 @@ class Query(object):
     quesion = graphene.Field(QuestionType, question = graphene.String(), answer = graphene.String(), score = graphene.Int())
     goal = graphene.Field(GoalType, goal = graphene.String(), completed = graphene.Boolean(), start_date = graphene.types.datetime.Date(), end_date = graphene.types.datetime.Date())
     
-    
-
+    #provides functionality to return the relevant information for each object/list of objects
     def resolve_all_students(self, info, **kwargs):
         return Student.objects.all()
 
